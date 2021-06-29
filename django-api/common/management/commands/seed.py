@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from halo import Halo
-from user.factories import UserFactories
+from user.factories import UserFactory
 
 
 class Command(BaseCommand):
@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def _generate_users(self, amount):
         for _ in range(amount):
-            UserFactories()
+            UserFactory()
 
     @Halo(text='Generating...', spinner='dots', color='blue', text_color='blue')
     def handle(self, *args, **options):

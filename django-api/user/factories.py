@@ -5,17 +5,17 @@ from factory import Sequence, PostGenerationMethodCall, sequence
 from .models import User
 
 
-class UserFactories(DjangoModelFactory):
+class UserFactory(DjangoModelFactory):
     first_name = Faker('first_name')
     last_name = Faker('last_name')
     email = Faker('email')
-    username = Sequence(lambda n: f'User-{n}')
+    # username = Sequence(lambda n: f'User-{n}')
     password = PostGenerationMethodCall('set_password', 'secret')
 
-    # @sequence
-    # def username(n):
-    #     max_id = User.objects.latest('id').id
-    #     return f'User-{max_id + 1}'
+    @sequence
+    def username(n):
+        max_id = User.objects.latest('id').id
+        return f'User-{max_id + 1}'
 
     class Meta:
         model = 'user.User'
