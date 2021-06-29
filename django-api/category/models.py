@@ -10,4 +10,5 @@ class Category(BaseModel):
         null=False,
         choices=CategoryNames.choices,
         default=CategoryNames.GENERAL,
+        unique=True,
     )

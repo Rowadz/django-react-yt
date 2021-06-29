@@ -21,3 +21,6 @@ class CategoryPost(BaseModel):
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [['post_id', 'category_id']]
