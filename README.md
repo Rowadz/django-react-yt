@@ -1,3 +1,3 @@
 Work in progress
 
-<img src="thumb.png">
+<img src="new-thumb.png">
