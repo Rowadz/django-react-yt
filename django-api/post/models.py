@@ -7,7 +7,11 @@ from .model_enums import Weight
 
 class Post(BaseModel):
     body = models.TextField(null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        related_name='posts',
+        on_delete=models.CASCADE,
+    )
     categories = models.ManyToManyField(Category, through='CategoryPost')
 
 

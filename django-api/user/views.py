@@ -2,9 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from .models import User
 from .serializers import (
+    UsersSerializer,
     RegisterSerializer,
     CustomTokenObtainPairSerializer,
 )
@@ -31,3 +32,8 @@ class RegisterView(CreateAPIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
+
+
+# class QueryingTheDBView(ListAPIView):
+#     queryset = User.objects.all().prefetch_related('posts__categories')
+#     serializer_class = UsersSerializer

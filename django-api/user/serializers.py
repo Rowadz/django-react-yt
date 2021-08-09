@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
@@ -7,6 +8,8 @@ from rest_framework.serializers import (
     EmailField,
     ModelSerializer,
 )
+from post.models import Post
+from category.models import Category
 from .models import User
 
 
@@ -58,3 +61,32 @@ class RegisterSerializer(ModelSerializer):
         user.save()
 
         return user
+
+
+class UserPostCategoriesSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class UserPostSerializer(ModelSerializer):
+    categories = UserPostCategoriesSerializer(many=True)
+
+    class Meta:
+        model = Post
+        fields = [
+            'id', 'body',
+            'created_at', 'updated_at',
+            'categories',
+        ]
+
+
+class UsersSerializer(ModelSerializer):
+    posts = UserPostSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email', 'posts'
+        ]
