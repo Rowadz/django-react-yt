@@ -7,7 +7,7 @@ from post.models import Post
 from category.model_enums import CategoryNames
 from .views import LoginView, RegisterView
 from .models import User
-from .serializers import UsersSerializer
+from .serializers import UsersSerializer, UsersSerializer2
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
@@ -25,7 +25,7 @@ urlpatterns = [
             ),
             serializer_class=UsersSerializer,
         ),
-        name='queries'
+        name='queries-1'
     ),
     # Getting the posts that have CPP as a category
     path(
@@ -41,7 +41,7 @@ urlpatterns = [
             ),
             serializer_class=UsersSerializer,
         ),
-        name='queries'
+        name='queries-2'
     ),
     # Filtering based on the relationship count [ONLY having a CPP as a category]
     path(
@@ -58,7 +58,7 @@ urlpatterns = [
             ),
             serializer_class=UsersSerializer,
         ),
-        name='queries'
+        name='queries-3'
     ),
     path(
         'queries-4/',
@@ -74,6 +74,17 @@ urlpatterns = [
             ),
             serializer_class=UsersSerializer,
         ),
-        name='queries'
+        name='queries-4'
     ),
+    path(
+        'top-10-users-by-post-count/',
+        ListAPIView.as_view(
+            queryset=User.objects.annotate(
+                posts_count=Count('posts')
+            ).order_by('-posts_count')[0:10],
+            serializer_class=UsersSerializer2,
+            pagination_class=None,
+        ),
+        name='top-10-users-by-post-count',
+    )
 ]

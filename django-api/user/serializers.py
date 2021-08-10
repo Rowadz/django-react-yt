@@ -1,5 +1,6 @@
 from django.db.models import fields
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import SerializerMethodField
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -89,4 +90,29 @@ class UsersSerializer(ModelSerializer):
         fields = [
             'id', 'username', 'first_name', 'last_name',
             'email', 'posts'
+        ]
+
+
+class UsersSerializer2(ModelSerializer):
+    posts_count = SerializerMethodField()
+
+    def get_posts_count(self, obj):
+        print(obj)
+        return obj.posts_count
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email', 'posts_count'
+        ]
+
+
+class BasicUserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email',
         ]
