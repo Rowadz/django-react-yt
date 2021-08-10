@@ -37,3 +37,4 @@ class RegisterView(CreateAPIView):
 # class QueryingTheDBView(ListAPIView):
 #     queryset = User.objects.all().prefetch_related('posts__categories')
 #     serializer_class = UsersSerializer
+#     pagination_class = None
