@@ -1,13 +1,14 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.generics import ListAPIView
-from django.db.models import Prefetch, Count
+from django.db.models import Prefetch, Count, Q
+from django.db.models.functions import Lower
 from category.models import Category
 from post.models import Post
 from category.model_enums import CategoryNames
 from .views import LoginView, RegisterView
 from .models import User
-from .serializers import UsersSerializer, UsersSerializer2
+from .serializers import UsersSerializer, UsersSerializer2, UsersSerializer3
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
@@ -86,5 +87,62 @@ urlpatterns = [
             pagination_class=None,
         ),
         name='top-10-users-by-post-count',
-    )
+    ),
+
+    # select where the first_name = Brittany or last_name = Jacobs
+    path(
+        'complex-queries-1',
+        ListAPIView.as_view(
+            queryset=User.objects.filter(
+                Q(first_name='Brittany') & Q(last_name='Jacobs')
+            ).prefetch_related('posts'),
+            serializer_class=UsersSerializer3,
+        ),
+        name='complex-queries-1',
+    ),
+
+    # select where the user first name starts with Mr
+    # and the email dose not end with @hotmail
+
+    path(
+        'complex-queries-2',
+        ListAPIView.as_view(
+            queryset=User.objects.filter(
+                Q(first_name__startswith='Rowadz') |
+                ~Q(email__endswith='@hotmail.com')
+            ).prefetch_related('posts'),
+            serializer_class=UsersSerializer3,
+        ),
+        name='complex-queries-2',
+    ),
+
+    path(
+        'complex-queries-3',
+        ListAPIView.as_view(
+            queryset=User.objects.annotate(lower_first_name=Lower('first_name')).filter(
+                lower_first_name__startswith='Ro'.lower()
+            ).prefetch_related('posts'),
+            serializer_class=UsersSerializer3,
+        ),
+        name='complex-queries-3',
+    ),
+
+    path(
+        'complex-queries-4',
+        ListAPIView.as_view(
+            queryset=User.objects.prefetch_related('posts__categories')
+            .annotate(
+                lower_first_name=Lower('first_name'),
+                last_name_lower=Lower('last_name'),
+            ).filter(
+                Q(lower_first_name__startswith='Ro'.lower())
+                | Q(last_name_lower__contains='Mo'.lower()),
+                posts__categories__name__in=[
+                    CategoryNames.CPP, CategoryNames.JAVASCRIPT
+                ]
+            ),
+            serializer_class=UsersSerializer3,
+        ),
+        name='complex-queries-4',
+    ),
 ]

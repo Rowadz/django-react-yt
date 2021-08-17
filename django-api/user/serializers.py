@@ -116,3 +116,24 @@ class BasicUserSerializer(ModelSerializer):
             'id', 'username', 'first_name', 'last_name',
             'email',
         ]
+
+
+class UserPostSerializer2(ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = [
+            'id', 'body',
+            'created_at', 'updated_at',
+        ]
+
+
+class UsersSerializer3(ModelSerializer):
+    posts = UserPostSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email', 'posts'
+        ]
