@@ -1,4 +1,9 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import (
+    Serializer,
+    IntegerField,
+    ModelSerializer,
+    SerializerMethodField,
+)
 from post.models import Post
 from user.serializers import BasicUserSerializer
 
@@ -25,3 +30,8 @@ class PostWithCategoriesCountSerializer(ModelSerializer):
         fields = [
             'id', 'body', 'categories_count', 'user'
         ]
+
+
+class PostGroupByCreatedDaySerializer(Serializer):
+    count = IntegerField()
+    created_day = IntegerField()
