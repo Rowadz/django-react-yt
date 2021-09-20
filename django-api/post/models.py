@@ -1,11 +1,11 @@
 from django.db import models
-from common.models import BaseModel
+from common.models import BaseModel, SoftDeleteModel
 from user.models import User
 from category.models import Category
 from .model_enums import Weight
 
 
-class Post(BaseModel):
+class Post(BaseModel, SoftDeleteModel):
     body = models.TextField(null=False)
     user = models.ForeignKey(
         User,
